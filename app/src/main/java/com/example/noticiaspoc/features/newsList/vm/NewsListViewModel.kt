@@ -52,7 +52,7 @@ class NewsListViewModel @Inject internal constructor(
         }
     }
 
-    class SongListViewModelFactory(private val repository: BandRepository) :
+    class NewsListViewModelFactory(private val repository: BandRepository) :
         ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(NewsListViewModel::class.java)) {
