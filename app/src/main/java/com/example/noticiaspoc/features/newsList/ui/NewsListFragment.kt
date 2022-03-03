@@ -35,7 +35,6 @@ class NewsListFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private val viewModel: NewsListViewModel by viewModels()
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

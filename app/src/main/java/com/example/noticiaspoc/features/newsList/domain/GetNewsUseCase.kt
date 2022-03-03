@@ -9,5 +9,4 @@ class GetNewsUseCase @Inject constructor(private val repository : NewsRepository
 
     suspend operator fun invoke(): List<NewsUI> =
         NewsResponseModelToNewsUIMapper.map(repository.getAllNews())
-
 }

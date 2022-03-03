@@ -11,9 +11,9 @@ class NewsRepository @Inject constructor(
 ) {
 
     suspend fun getAllNews(): List<NewsResponse> {
-        val response = api.getNewsDefault()
-        newsProvider.news = response
+        val response = api.getAllNews()
+        newsProvider.news = response.getOrNull()!!.getNewsList()
 
-        return response
+        return newsProvider.news
     }
 }
