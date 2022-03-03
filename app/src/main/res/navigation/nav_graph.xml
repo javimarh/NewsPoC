@@ -7,28 +7,18 @@
 
     <fragment
         android:id="@+id/home_fragment"
-        android:name="com.example.javichordskotlin.ui.home.HomeFragment"
+        android:name="com.example.noticiaspoc.features.newsList.ui.NewsListFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_news_list" >
         <action
-            android:id="@+id/home_to_song_list"
-            app:destination="@id/song_list_fragment" />
-        <action
-            android:id="@+id/home_to_add_song"
-            app:destination="@id/add_song_fragment" />
+            android:id="@+id/home_to_news_detail"
+            app:destination="@id/news_detail_fragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/song_list_fragment"
-        android:name="com.example.javichordskotlin.ui.songList.ui.SongListFragment"
-        android:label="Song List"
-        tools:layout="@layout/fragment_song_list">
-    </fragment>
-
-    <fragment
-        android:id="@+id/add_song_fragment"
-        android:name="com.example.javichordskotlin.ui.addSong.AddSongFragment"
-        android:label="Add Song"
-        tools:layout="@layout/fragment_add_song">
+        android:id="@+id/news_detail_fragment"
+        android:name="com.example.noticiaspoc.features.newsList.ui.NewsDetailFragment"
+        android:label="News Detail"
+        tools:layout="@layout/fragment_news_detail">
     </fragment>
 </navigation>

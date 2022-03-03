@@ -16,52 +16,54 @@
 
 package com.example.noticiaspoc.features.newsList.vm
 
+import android.view.View
+import androidx.databinding.ObservableInt
 import androidx.lifecycle.*
-import com.example.javichordskotlin.data.Band
-import com.example.javichordskotlin.data.BandWSongs
-import com.example.javichordskotlin.data.repo.BandRepository
+import com.example.noticiaspoc.features.newsList.domain.GetNewsUseCase
+import com.example.noticiaspoc.features.newsList.model.NewsUI
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class NewsListViewModel @Inject internal constructor(
-    bandRepository: BandRepository
+class NewsListViewModel @Inject constructor(
+    private val getNewsUseCase:GetNewsUseCase
 ) : ViewModel() {
 
     private val status: MutableStateFlow<Int> = MutableStateFlow(
         STATUS.length
     )
 
-    val bands: LiveData<List<BandWSongs>> = status.flatMapLatest {
-        bandRepository.getBandsWSongs()
-    }.asLiveData()
+    val news = MutableLiveData<List<NewsUI>>()
+    val isLoadingVisibility = ObservableInt(View.GONE)
+
+//    val news: LiveData<List<NewsUI>> = status.flatMapLatest {
+//        bandRepository.getBandsWSongs()
+//    }.asLiveData()
 
     init {
         viewModelScope.launch {
-            status.collect {
-//                savedStateHandle.set(STATUS, it)
-            }
-        }
+            isLoadingVisibility.set(View.VISIBLE)
+            val result = getNewsUseCase()
 
-        fun insert(band: Band) = viewModelScope.launch {
-            bandRepository.insertBand(band)
+            if (!result.isNullOrEmpty()) {
+                news.postValue(result)
+                isLoadingVisibility.set(View.VISIBLE)
+            }
         }
     }
 
-    class NewsListViewModelFactory(private val repository: BandRepository) :
-        ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(NewsListViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return NewsListViewModel(repository) as T
-            }
-            throw IllegalArgumentException("Unknown ViewModel class")
-        }
-    }
+//    class NewsListViewModelFactory(private val repository: BandRepository) :
+//        ViewModelProvider.Factory {
+//        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//            if (modelClass.isAssignableFrom(NewsListViewModel::class.java)) {
+//                @Suppress("UNCHECKED_CAST")
+//                return NewsListViewModel(repository) as T
+//            }
+//            throw IllegalArgumentException("Unknown ViewModel class")
+//        }
+//    }
 
     companion object {
         private const val ERROR = -1

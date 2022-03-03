@@ -5,18 +5,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.javichordskotlin.data.BandWSongs
-import com.example.javichordskotlin.data.Song
-import com.example.javichordskotlin.databinding.ItemBandListBinding
+import com.example.noticiaspoc.databinding.ItemNewsListBinding
+import com.example.noticiaspoc.features.newsList.model.NewsAdapterModel
+import com.example.noticiaspoc.features.newsList.model.NewsListEntity
 
-class BandAdapter : ListAdapter<BandWSongs, RecyclerView.ViewHolder>(BandDiffCallback()) {
+class NewsAdapter : ListAdapter<NewsAdapterModel, RecyclerView.ViewHolder>(BandDiffCallback()) {
 
-    private var bandList: MutableList<BandWSongs> = mutableListOf();
+    private var bandList: MutableList<NewsAdapterModel> = mutableListOf();
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
-        return BandViewHolder(
-            ItemBandListBinding.inflate(
+        return NewsViewHolder(
+            ItemNewsListBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -26,38 +26,37 @@ class BandAdapter : ListAdapter<BandWSongs, RecyclerView.ViewHolder>(BandDiffCal
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = getItem(position)
-        if (item is BandWSongs)
-            (holder as BandViewHolder).bind(item)
+        if (item is NewsAdapterModel)
+            (holder as NewsViewHolder).bind(item)
     }
 
-    override fun submitList(list: List<BandWSongs>?) {
+    override fun submitList(list: List<NewsAdapterModel>?) {
         list?.let { bandList.addAll(list) }
         super.submitList(list)
     }
 
     override fun getItemCount(): Int = bandList.size
 
-    inner class BandViewHolder(
-        private val binding: ItemBandListBinding
+    inner class NewsViewHolder(
+        private val binding: ItemNewsListBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: BandWSongs) {
+        fun bind(item: NewsAdapterModel) {
             binding.apply {
-                band = item
-                adapter = SongAdapter(item.songList)
+                news = item
                 executePendingBindings()
             }
         }
     }
 }
 
-private class BandDiffCallback : DiffUtil.ItemCallback<BandWSongs>() {
+private class BandDiffCallback : DiffUtil.ItemCallback<NewsAdapterModel>() {
 
-    override fun areItemsTheSame(oldItem: BandWSongs, newItem: BandWSongs): Boolean {
-        return oldItem.band.id == newItem.band.id
+    override fun areItemsTheSame(oldItem: NewsAdapterModel, newItem: NewsAdapterModel): Boolean {
+        return oldItem.url == newItem.url
     }
 
-    override fun areContentsTheSame(oldItem: BandWSongs, newItem: BandWSongs): Boolean {
-        return oldItem == newItem
+    override fun areContentsTheSame(oldItem: NewsAdapterModel, newItem: NewsAdapterModel): Boolean {
+        return oldItem.content == newItem.content
     }
 }
