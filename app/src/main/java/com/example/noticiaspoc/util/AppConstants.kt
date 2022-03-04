@@ -1,4 +1,6 @@
 package com.example.noticiaspoc.util
 
-const val STATUS_SUCCEEDED = 1
-const val STATUS_ERROR = -1
+const val NEWS_TITLE = "title"
+const val NEWS_DESCRIPTION = "description"
+const val NEWS_URLTOIMAGE = "imageUrl"
+const val NEWS_DATE = "date"

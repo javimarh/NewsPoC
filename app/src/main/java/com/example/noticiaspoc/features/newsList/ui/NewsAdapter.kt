@@ -7,11 +7,14 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.noticiaspoc.databinding.ItemNewsListBinding
 import com.example.noticiaspoc.features.newsList.model.NewsAdapterModel
-import com.example.noticiaspoc.features.newsList.model.NewsListEntity
+import com.example.noticiaspoc.features.newsList.vm.NewsListViewModel
+import com.example.noticiaspoc.util.loadListImage
 
-class NewsAdapter : ListAdapter<NewsAdapterModel, RecyclerView.ViewHolder>(BandDiffCallback()) {
+class NewsAdapter(private val viewModel: NewsListViewModel) :
+    ListAdapter<NewsAdapterModel, RecyclerView.ViewHolder>(NewsDiffCallback()) {
 
-    private var bandList: MutableList<NewsAdapterModel> = mutableListOf();
+    private var newsList: MutableList<NewsAdapterModel> = mutableListOf();
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
@@ -31,11 +34,11 @@ class NewsAdapter : ListAdapter<NewsAdapterModel, RecyclerView.ViewHolder>(BandD
     }
 
     override fun submitList(list: List<NewsAdapterModel>?) {
-        list?.let { bandList.addAll(list) }
+        list?.let { newsList.addAll(list) }
         super.submitList(list)
     }
 
-    override fun getItemCount(): Int = bandList.size
+    override fun getItemCount(): Int = newsList.size
 
     inner class NewsViewHolder(
         private val binding: ItemNewsListBinding
@@ -44,19 +47,23 @@ class NewsAdapter : ListAdapter<NewsAdapterModel, RecyclerView.ViewHolder>(BandD
         fun bind(item: NewsAdapterModel) {
             binding.apply {
                 news = item
+                itemNewsListLayout.setOnClickListener { viewModel.onNewsClicked(item) }
+                item.urlToImage?.let {
+                    itemNewsListImage.loadListImage(item.urlToImage)
+                }
                 executePendingBindings()
             }
         }
     }
 }
 
-private class BandDiffCallback : DiffUtil.ItemCallback<NewsAdapterModel>() {
+private class NewsDiffCallback : DiffUtil.ItemCallback<NewsAdapterModel>() {
 
     override fun areItemsTheSame(oldItem: NewsAdapterModel, newItem: NewsAdapterModel): Boolean {
-        return oldItem.url == newItem.url
+        return oldItem.title == newItem.title
     }
 
     override fun areContentsTheSame(oldItem: NewsAdapterModel, newItem: NewsAdapterModel): Boolean {
-        return oldItem.content == newItem.content
+        return oldItem.description == newItem.description
     }
 }

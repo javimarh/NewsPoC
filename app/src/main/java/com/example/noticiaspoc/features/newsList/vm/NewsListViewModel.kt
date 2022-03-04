@@ -18,57 +18,61 @@ package com.example.noticiaspoc.features.newsList.vm
 
 import android.view.View
 import androidx.databinding.ObservableInt
-import androidx.lifecycle.*
-import com.example.noticiaspoc.features.newsList.domain.GetNewsUseCase
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.noticiaspoc.features.newsList.domain.GetAllNewsUseCase
+import com.example.noticiaspoc.features.newsList.domain.GetNewsByQueryUseCase
+import com.example.noticiaspoc.features.newsList.model.NewsAdapterModel
 import com.example.noticiaspoc.features.newsList.model.NewsUI
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class NewsListViewModel @Inject constructor(
-    private val getNewsUseCase:GetNewsUseCase
+    private val getAllNewsUseCase: GetAllNewsUseCase,
+    private val getNewsByQueryUseCase: GetNewsByQueryUseCase
 ) : ViewModel() {
 
-    private val status: MutableStateFlow<Int> = MutableStateFlow(
-        STATUS.length
-    )
-
     val news = MutableLiveData<List<NewsUI>>()
-    val isLoadingVisibility = ObservableInt(View.GONE)
 
-//    val news: LiveData<List<NewsUI>> = status.flatMapLatest {
-//        bandRepository.getBandsWSongs()
-//    }.asLiveData()
+    private val newsClickedMutable: MutableLiveData<NewsAdapterModel> = MutableLiveData()
+    val newsClicked: LiveData<NewsAdapterModel>
+        get() = newsClickedMutable
+
+    //TODO: Implement progress bar
+    val isLoadingVisibility = ObservableInt()
+
+    private val isLoadingMutableLiveData: MutableLiveData<Int> = MutableLiveData()
 
     init {
         viewModelScope.launch {
-            isLoadingVisibility.set(View.VISIBLE)
-            val result = getNewsUseCase()
+            isLoadingMutableLiveData.value = View.VISIBLE
+            val result = getAllNewsUseCase()
 
             if (!result.isNullOrEmpty()) {
                 news.postValue(result)
-                isLoadingVisibility.set(View.VISIBLE)
+                isLoadingMutableLiveData.value = View.GONE
             }
         }
     }
 
-//    class NewsListViewModelFactory(private val repository: BandRepository) :
-//        ViewModelProvider.Factory {
-//        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-//            if (modelClass.isAssignableFrom(NewsListViewModel::class.java)) {
-//                @Suppress("UNCHECKED_CAST")
-//                return NewsListViewModel(repository) as T
-//            }
-//            throw IllegalArgumentException("Unknown ViewModel class")
-//        }
-//    }
+    fun getNewsByQuery(query: String) {
+        viewModelScope.launch {
+            isLoadingMutableLiveData.value = View.VISIBLE
+            val result = getNewsByQueryUseCase(query)
 
-    companion object {
-        private const val ERROR = -1
-        private const val LOADING = 1
-        private const val SUCCEED = 2
-        private const val STATUS = "STATUS"
+            if (!result.isNullOrEmpty()) {
+                news.postValue(result)
+                isLoadingMutableLiveData.value = View.GONE
+            }
+        }
+    }
+
+    //TODO: Save last position to comeback there when returning
+    fun onNewsClicked(newsClicked: NewsAdapterModel) {
+        newsClickedMutable.value = newsClicked
     }
 }

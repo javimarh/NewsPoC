@@ -5,8 +5,8 @@ import com.example.noticiaspoc.features.newsList.mapper.NewsResponseModelToNewsU
 import com.example.noticiaspoc.features.newsList.model.NewsUI
 import javax.inject.Inject
 
-class GetNewsUseCase @Inject constructor(private val repository : NewsRepository) {
+class GetNewsByQueryUseCase @Inject constructor(private val repository: NewsRepository) {
 
-    suspend operator fun invoke(): List<NewsUI> =
-        NewsResponseModelToNewsUIMapper.map(repository.getAllNews())
+    suspend operator fun invoke(query: String): List<NewsUI> =
+        NewsResponseModelToNewsUIMapper.map(repository.getNewsByQuery(query))
 }

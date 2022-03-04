@@ -24,7 +24,4 @@ import kotlinx.coroutines.SupervisorJob
 @HiltAndroidApp
 class MainApplication : Application() {
 
-    val applicationScope = CoroutineScope(SupervisorJob())
-//    val database by lazy { SongsRoomDatabase.getInstance(this, applicationScope) }
-//    val repository by lazy { BandRepository(database.bandDao(), database.songDao()) }
 }

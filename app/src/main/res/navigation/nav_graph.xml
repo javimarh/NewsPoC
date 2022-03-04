@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/home_fragment">
+    app:startDestination="@id/fragment_news_list">
 
     <fragment
-        android:id="@+id/home_fragment"
+        android:id="@+id/fragment_news_list"
         android:name="com.example.noticiaspoc.features.newsList.ui.NewsListFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_news_list" >
+        tools:layout="@layout/fragment_news_list">
         <action
             android:id="@+id/home_to_news_detail"
             app:destination="@id/news_detail_fragment" />
@@ -20,5 +20,8 @@
         android:name="com.example.noticiaspoc.features.newsList.ui.NewsDetailFragment"
         android:label="News Detail"
         tools:layout="@layout/fragment_news_detail">
+        <action
+            android:id="@+id/detail_to_news_list"
+            app:destination="@id/fragment_news_list" />
     </fragment>
 </navigation>

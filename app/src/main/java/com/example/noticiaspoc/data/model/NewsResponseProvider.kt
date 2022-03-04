@@ -5,5 +5,5 @@ import javax.inject.Singleton
 
 @Singleton
 class NewsResponseProvider @Inject constructor(){
-    var news: List<NewsResponse> = emptyList()
+    var news: List<NewsResponseModel> = emptyList()
 }
